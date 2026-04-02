@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../utils/utils.js";
 
 export const createUser = async (req, res) => {
-    const {userName, email, password}= req.body;
+    const {userName, email, password, age}= req.body;
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -12,9 +12,9 @@ export const createUser = async (req, res) => {
             res.status(400).json({ message: "User already exists" });
             return;
         }
-
+ 
         const user = await User.create({
-            userName, email, password: hashedPassword
+            userName, email, password: hashedPassword, age
         });
         if(user) {
             generateToken(user._id.toString(), res);
@@ -24,6 +24,7 @@ export const createUser = async (req, res) => {
                 _id: user._id,
                 userName: user.userName,
                 email: user.email,
+                age: user.age,
             })
         } else {
             res.status(400).json({ message: "Invalid user data" });
