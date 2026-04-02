@@ -29,7 +29,6 @@ const chatGroupSchema = new Schema({
 
 const ChatGroup = mongoose.model("ChatGroup", chatGroupSchema);
 
-
 const userSchema = new Schema({
     userName: {
         type: String,
@@ -72,7 +71,44 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "ChatGroup",
         }
-    ]
+    ],
+
+    prefrences: {
+        categories: [{
+            type: String,
+            enum: ["nature", "food", "adventure"]
+        }],
+        budget: {
+            type: String,
+            enum: ["low", "medium", "high"],
+            default: "medium",
+        },
+        travelRadius: {
+            type: Number,
+            default: 10, // km
+        }
+    },
+
+    homeLocation: {
+        lat: {
+            type: Number,
+            default: 25.000,
+        },
+        long: {
+            type: Number,
+            default: 71,
+        }
+    },
+
+    savedPlaces: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Place",
+    }],
+
+    savedTrips: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Trip",
+    }]
 }, { timestamps: true });
 
 
