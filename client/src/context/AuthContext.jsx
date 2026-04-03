@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 
+const BASE_URL = 'http://localhost:8000';
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext()
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/login', {
+            const res = await fetch(`${BASE_URL}/api/user/login`, {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
