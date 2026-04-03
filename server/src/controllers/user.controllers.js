@@ -58,13 +58,15 @@ export const loginUser = async (req, res)=> {
             return;
         }
 
-        generateToken(user._id.toString(), res);
+        const token = generateToken(user._id.toString(), res);
 
-        res.status(200).json({
+        
+        return res.status(200).json({
             _id: user._id,
-            fullName: user.fullName,
+            fullName: user.userName,
             email: user.email,
-            profilePic: user.profilePic,
+            profilePic: user.profilePic | null,
+            token: token,
         });
 
     } catch (error) {

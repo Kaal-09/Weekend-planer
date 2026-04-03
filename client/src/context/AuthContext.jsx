@@ -30,14 +30,16 @@ export const AuthProvider = ({ children }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
-
+ 
             const data = await res.json()
             if (!res.ok) throw new Error(data.message || 'Login failed');
 
-            setUser(data.user);
+            console.log("data recieved:", data);
+            setUser(data.email);
             setToken(data.token);
+            console.log(`User saved at local storage: ${data.email}`)
             localStorage.setItem('authToken', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('user', JSON.stringify(data.email));
             setLoading(false);
             return true;
         } catch (err) {
