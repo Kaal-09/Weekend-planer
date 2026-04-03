@@ -3,6 +3,7 @@ import { UserIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../context/useAuth';
 
 const BASE_URL = 'http://localhost:8000';
 
@@ -10,6 +11,9 @@ const Signup = () => {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [age, setAge] = useState('');
+
+    const { login } = useAuthStore();
 
     const navigate = useNavigate();
 
@@ -22,6 +26,7 @@ const Signup = () => {
                     userName,
                     email,
                     password,
+                    age,
                 },
                 {
                     headers: {
@@ -35,9 +40,14 @@ const Signup = () => {
             //     return;
             // }
             console.log(res.data);
-            
+            const is_fine = login(email, password);
+            if(!is_fine)  {
+                toast.error('Signup unsuccessfull');
+                return;
+            }
             toast.success('Signup successful!');
-            navigate('/login');
+
+            navigate('/'); 
         } catch (error) {
             toast.error(error?.response?.data?.message || 'Signup failed');
         }
@@ -76,6 +86,18 @@ const Signup = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             placeholder="you@example.com"
+                            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                        <input
+                            type="number"
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
+                            required
+                            placeholder="Enter your age"
+                            min="1"
                             className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
                         />
                     </div>

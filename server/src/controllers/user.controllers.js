@@ -12,7 +12,7 @@ export const createUser = async (req, res) => {
             res.status(400).json({ message: "User already exists" });
             return;
         }
- 
+
         const user = await User.create({
             userName, email, password: hashedPassword, age
         });
