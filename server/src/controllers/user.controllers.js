@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import { generateToken } from "../utils/utils.js";
+import { generateRefreshToken, generateToken } from "../utils/utils.js";
+import jwt from "jsonwebtoken";
 
 export const createUser = async (req, res) => {
     const {userName, email, password, age}= req.body;
@@ -59,14 +60,23 @@ export const loginUser = async (req, res)=> {
         }
 
         const token = generateToken(user._id.toString(), res);
+        const refreshToken = generateRefreshToken(user._id, res);
 
-        
-        return res.status(200).json({
+        const option = {
+            httpOnly: true,
+            secure: true,
+        }
+
+        return res.status(200)
+        .cookie("accesstoken", token, option)
+        .cookie("refreshToken", refreshToken, option).
+        json({
             _id: user._id,
             fullName: user.userName,
             email: user.email,
             profilePic: user.profilePic | null,
             token: token,
+            refreshToken: refreshToken,
         });
 
     } catch (error) {
@@ -77,3 +87,72 @@ export const loginUser = async (req, res)=> {
         });
     }
 };
+
+export const logoutUser = async (req, res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const option = {
+        httpOnly: true,
+        secure: true,
+    }
+    return res
+    .status(200)
+    .clearCookie("accesstoken", option)
+    .clearCookie("refreshToken", option)
+    .json({
+        status: 200,
+        message: 'User logged out.'
+    });
+}
+
+export const refreshAccessToken = async (req, res) => {
+    const incommingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+    if(!incommingRefreshToken) {
+        throw new Error(401, 'Unauthroized requiest');
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incommingRefreshToken,
+            process.env.REFRESH_TOKEN_KEY,
+        )
+        const user = await User.findById(decodedToken._id)
+        if(!user) {
+            throw new Error(401, 'Unauthroized requiest');
+        }
+    
+        if(incommingRefreshToken !== user.refreshToken){
+            throw new Error(401, 'Refresh token is not matching');
+        }
+        const options = {
+            httpOnly: true,
+            secure: true,
+        }
+        const accessToken = generateToken(user._id.toString(), res);
+        const refreshToken = await generateRefreshToken(user._id, res);
+    
+        return res.status(200)
+        .cookie("acesstoken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({
+            status: 200,
+            message: 'Tokens are returned',
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        });
+    } catch (error) {
+        console.log(error);
+        throw new Error("Error in refreshAccesToken");
+        
+    }
+}

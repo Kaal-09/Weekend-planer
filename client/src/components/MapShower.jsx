@@ -1,112 +1,3 @@
-// import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline, useMap } from "react-leaflet";
-// import "leaflet/dist/leaflet.css";
-// import { useState, useEffect } from "react";
-// import { Navigation } from "lucide-react"; // Elegant icon
-
-// // Helper component to move the map view
-// function ChangeView({ center }) {
-//     const map = useMap();
-//     useEffect(() => {
-//         if (center) map.flyTo([center.lat, center.lng], 14);
-//     }, [center, map]);
-//     return null;
-// }
-
-// function MapClickHandler({ setDestination, currentLocation, setRoute }) {
-//     useMapEvents({
-//         click: async (e) => {
-//             const dest = e.latlng;
-//             setDestination(dest);
-
-//             if (currentLocation) {
-//                 const url = `https://router.project-osrm.org/route/v1/driving/${currentLocation.lng},${currentLocation.lat};${dest.lng},${dest.lat}?overview=full&geometries=geojson`;
-//                 try {
-//                     const res = await fetch(url);
-//                     const data = await res.json();
-//                     const coords = data.routes[0].geometry.coordinates;
-//                     const routeLatLng = coords.map(([lng, lat]) => ({ lat, lng }));
-//                     setRoute(routeLatLng);
-//                 } catch (error) {
-//                     console.error("Routing error:", error);
-//                 }
-//             }
-//         },
-//     });
-//     return null;
-// }
-
-// function MapShower() {
-//     const [destination, setDestination] = useState(null);
-//     const [currentLocation, setCurrentLocation] = useState({ lat: 48.8566, lng: 2.3522 });
-//     const [route, setRoute] = useState([]);
-
-//     const getLocation = () => {
-//         navigator.geolocation.getCurrentPosition((pos) => {
-//             setCurrentLocation({
-//                 lat: pos.coords.latitude,
-//                 lng: pos.coords.longitude,
-//             });
-//         });
-//     };
-
-//     return (
-//         /* 1. Container takes 100% of parent and stays relative so button can float */
-//         <div className="relative w-full h-full group">
-
-//             {/* 2. Elegant Floating Button */}
-//             <button
-//                 onClick={getLocation}
-//                 className="absolute top-4 right-4 z-1000 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2.5 rounded-xl border border-gray-200 shadow-lg hover:bg-black hover:text-white transition-all duration-300 active:scale-95 font-medium text-sm"
-//             >
-//                 <Navigation size={16} className="rotate-45" />
-//                 Current Location
-//             </button>
-
-//             <MapContainer
-//                 center={[currentLocation.lat, currentLocation.lng]}
-//                 zoom={13}
-//                 zoomControl={false}
-//                 className="w-full h-full z-0" // Removed style for Tailwind classes
-//             >
-//                 <TileLayer
-//                     url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-//                     attribution='&copy; OpenStreetMap'
-//                 />
-
-//                 <ChangeView center={currentLocation} />
-
-//                 <MapClickHandler
-//                     setDestination={setDestination}
-//                     currentLocation={currentLocation}
-//                     setRoute={setRoute}
-//                 />
-
-//                 {currentLocation && (
-//                     <Marker position={currentLocation}>
-//                         <Popup>You are here</Popup>
-//                     </Marker>
-//                 )}
-
-//                 {destination && (
-//                     <Marker position={destination}>
-//                         <Popup>Destination</Popup>
-//                     </Marker>
-//                 )}
-
-//                 {route.length > 0 && (
-//                     <Polyline
-//                         positions={route}
-//                         pathOptions={{ color: '#000', weight: 4, opacity: 0.7, lineJoin: 'round' }}
-//                     />
-//                 )}
-//             </MapContainer>
-//         </div>
-//     );
-// }
-
-// export default MapShower;
-
-
 
 import {MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline, useMap} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -147,7 +38,7 @@ function MapClickHandler({ setDestination, currentLocation, setRoute}) {
 
 function MapShower() {
     const [destination, setDestination] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState({lat: 48.8566, lng: 2.3522,});
+    const [currentLocation, setCurrentLocation] = useState({lat: 22.7196, lng: 75.8577,});
     const [route, setRoute] = useState([]);
 
     const getLocation = () => {
@@ -171,7 +62,7 @@ function MapShower() {
 
             <MapContainer
                 center={[currentLocation.lat, currentLocation.lng]}
-                zoom={13}
+                zoom={12}
                 zoomControl={false}
                 className="w-full h-full z-0"
             >

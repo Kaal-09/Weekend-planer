@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken'
 
 const { Schema } = mongoose;
 
@@ -108,9 +109,32 @@ const userSchema = new Schema({
     savedTrips: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Trip",
-    }]
+    }],
+    
+    refreshToken: {
+        type: String
+    }
 }, { timestamps: true });
 
+// another method to store password will read about pre middleware
+// userSchema.pre("save", async function (next) {
+//     if(!this.isModified("password")) return next();
+
+//     this.password = bcrypt.hash(this.password, 10);
+//     next();
+// })
+
+userSchema.methods.generateRefreshToken = function () {
+    return jwt.sign(
+        {
+            id: this._id,
+        },
+        process.env.REFRESH_TOKEN_KEY,
+        {
+            expiresIn: "10d",
+        }
+    )
+}
 
 const User = mongoose.model("User", userSchema);
 

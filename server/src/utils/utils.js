@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose';
+import User from '../models/user.model';
 
-export const generateToken = (userId, res) => {
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-        expiresIn: '10d',
+export const generateToken = (userId, userEmail, res) => {
+    const token = jwt.sign({ _id: userId, email: userEmail }, process.env.JWT_SECRET, {
+        expiresIn: '1d',
     });
 
     res.cookie("token", token, {
@@ -14,6 +15,22 @@ export const generateToken = (userId, res) => {
     });
 
     return token; 
+}
+
+export const generateRefreshToken = async (userId, res) => {
+    try {
+        const user = User.findOneById(userId);
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken;
+        await user.save({validateBeforeSave: false});
+
+        return refreshToken;
+    } catch (error) {
+        console.log(error);
+        
+        throw new Error(500, 'Some error occured while creating refreshToken');
+    }
 }
 
 export const connectDB = async () => {
