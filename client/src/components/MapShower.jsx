@@ -62,7 +62,7 @@ function MapShower() {
 
             <MapContainer
                 center={[currentLocation.lat, currentLocation.lng]}
-                zoom={12}
+                zoom={10}
                 zoomControl={false}
                 className="w-full h-full z-0"
             >

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Compass, Map, Clock, User, Settings, LogOut, ChevronRight } from "lucide-react";
+import { useAuthStore } from "../context/useAuth";
 
 const Sidebar = () => {
   const recentTrips = [
@@ -11,6 +12,10 @@ const Sidebar = () => {
   ];
   const temp = motion
   if(!temp);
+  const { logout } = useAuthStore();
+  const logoutHandler = async () => {
+    logout()
+  }
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-80 bg-white/80 backdrop-blur-xl border-l border-gray-100 flex flex-col p-8 z-40 shadow-2xl shadow-gray-200/50">
@@ -54,8 +59,8 @@ const Sidebar = () => {
         <SidebarLink to="/profile" icon={<User size={18} />} label="My Profile" />
         <SidebarLink to="/settings" icon={<Settings size={18} />} label="Settings" />
         
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors mt-4 group">
-          <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+        <button onClick={logoutHandler} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors mt-4 group cursor-pointer">
+          <LogOut size={18} className="group-hover:-translate-x-1 transition-transform " />
           <span className="text-sm font-semibold">Sign Out</span>
         </button>
       </div>

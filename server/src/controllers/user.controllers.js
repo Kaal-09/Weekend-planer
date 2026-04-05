@@ -18,7 +18,9 @@ export const createUser = async (req, res) => {
             userName, email, password: hashedPassword, age
         });
         if(user) {
-            generateToken(user._id.toString(), res);
+            const tmep = generateToken(user._id.toString(), user.email, res);
+            console.log('User created in signup and token will be generated latter in login automatically generated: ', tmep);
+            
             await user.save();
 
             res.status(201).json({
@@ -43,40 +45,45 @@ export const createUser = async (req, res) => {
 
 export const loginUser = async (req, res)=> {
     const { email, password } = req.body;
-
+ 
     try {
+        console.log('Inside login of backend about to find user and do some sutf');
+        
         const user = await User.findOne({ email });
 
         if (!user) {
-            res.status(400).json({ message: "Invalid credentials" });
+            res.status(400).json({ message: "No user found" });
             return;
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         if (!isPasswordCorrect) {
-            res.status(400).json({ message: "Invalid credentials" });
+            res.status(400).json({ message: "Password doesnt match" });
             return;
         }
+        const token = generateToken(user._id.toString(), user.email);
+        const refreshToken = await generateRefreshToken(user._id);
 
-        const token = generateToken(user._id.toString(), res);
-        const refreshToken = generateRefreshToken(user._id, res);
-
-        const option = {
+        res.cookie("accesstoken", token, {
+            maxAge: 1 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            secure: true,
-        }
+            secure: process.env.NODE_ENV !== "development",
+        });
+
+        res.cookie("refreshtoken", refreshToken, {
+            maxAge: 10 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== "development",
+        });
+        console.log('User loged in and refresh and access token are created and are ready to use');
 
         return res.status(200)
-        .cookie("accesstoken", token, option)
-        .cookie("refreshToken", refreshToken, option).
-        json({
+        .json({
             _id: user._id,
             fullName: user.userName,
             email: user.email,
-            profilePic: user.profilePic | null,
-            token: token,
-            refreshToken: refreshToken,
+            profilePic: user.profilePic || null,
         });
 
     } catch (error) {
@@ -156,3 +163,5 @@ export const refreshAccessToken = async (req, res) => {
         
     }
 }
+
+// export const getUserById

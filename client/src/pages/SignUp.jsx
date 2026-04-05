@@ -20,6 +20,8 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
+            console.log("Inside user signup of frontend about to make requesto to backend");
+            
             const res = await axios.post(
                 `${BASE_URL}/api/user/signup`,
                 {
@@ -39,7 +41,9 @@ const Signup = () => {
             //     console.log("Some problem occurred while logging in: ", res);
             //     return;
             // }
+            console.log('Response returned about to make request login of AuthController');
             console.log(res.data);
+
             const is_fine = login(email, password);
             if(!is_fine)  {
                 toast.error('Signup unsuccessfull');

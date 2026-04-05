@@ -6,12 +6,12 @@ const chats = [
   { id: 2, name: "Travel Squad", message: "Tickets booked!", time: "1:05 PM", unread: 5, online: false, isGroup: true, color: "bg-blue-100 text-blue-600" },
   { id: 3, name: "Riya Patel", message: "Check this place", time: "Yesterday", unread: 0, online: true, isGroup: false, color: "bg-purple-100 text-purple-600" },
   { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
-  { id: 4, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 5, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 6, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 7, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 8, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 9, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
+  { id: 10, name: "Manali Group", message: "Hotel options?", time: "Mon", unread: 0, online: false, isGroup: true, color: "bg-emerald-100 text-emerald-600" },
 ];
 
 const ChatSidebar = () => {
