@@ -7,7 +7,7 @@ import { Navigation } from "lucide-react";
 function ChangeView({ center }) {
     const map = useMap();
     useEffect(() => {
-        if (center) map.flyTo([center.lat, center.lng], 15);
+        if (center) map.flyTo([center.lat, center.lng], 13.3);
     }, [center, map]);
     return null;
 }
@@ -63,7 +63,6 @@ function MapShower() {
             <MapContainer
                 center={[currentLocation.lat, currentLocation.lng]}
                 zoom={10}
-                zoomControl={false}
                 className="w-full h-full z-0"
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap'/>
