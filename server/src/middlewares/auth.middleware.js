@@ -21,8 +21,10 @@ export const verifyJWT = async (req, _, next) => {
         req.user = user;
         next(); 
     } catch (error) {
-        const err = new Error("Unauthorized request");
-        err.statusCode = 401;
-        throw err;
+        console.log("JWT ERROR:", error.message); 
+
+        return res.status(401).json({
+            message: error.message || "Unauthorized request"
+        });
     }
 }

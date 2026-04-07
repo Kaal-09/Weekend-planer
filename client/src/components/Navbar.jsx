@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Rocket, User as UserIcon, LogOut, ChevronDown, UserCircle } from "lucide-react";
 import { useAuthStore } from "../context/useAuth";
 import { axiosInstance } from '../utils/axiosInstance';
@@ -9,7 +10,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [user, setUser] = useState(null);
-    const { userEmail } = useAuthStore();
+    const { userEmail, logout } = useAuthStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const Navbar = () => {
     }, [userEmail]);
 
     const handleLogout = () => {
-        // logout(); 
+        logout(); 
         setUser(null);
         setIsProfileOpen(false);
         navigate("/");

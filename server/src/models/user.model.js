@@ -54,6 +54,11 @@ const userSchema = new Schema({
         required: true,
     },
 
+    bio: {
+        type: String,
+        default: "",
+    },
+
     friends: [
         {
             type: Schema.Types.ObjectId,

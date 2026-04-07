@@ -75,7 +75,7 @@ const ChatSidebar = () => {
                                 </p>
 
                                 {chat.unread > 0 && (
-                                    <div className="bg-blue-600 text-white text-[10px] min-w-[18px] h-[18px] flex items-center justify-center px-1.5 rounded-full font-bold shadow-md shadow-blue-200">
+                                    <div className="bg-blue-600 text-white text-[10px] min-w-4.5 h-4.5 flex items-center justify-center px-1.5 rounded-full font-bold shadow-md shadow-blue-200">
                                         {chat.unread}
                                     </div>
                                 )}
