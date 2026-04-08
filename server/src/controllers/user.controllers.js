@@ -173,6 +173,35 @@ export const getUserByEmail = async (req, res) => {
     console.log(userEmail);
     
     try {
+        const user = await User.findOne({email: userEmail}).select("-password -refreshToken");
+        if(!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+
+        return res.status(200)
+        .json({
+            message: 'User found',
+            user: user,
+        })
+
+    } catch (error) {
+        console.log('Error in getUserByEmail controller', error);
+        return res.status(500).json({
+            message: error.message || "Internal Server Error"
+        });
+    }
+}
+export const getleanUserByEmail = async (req, res) => {
+    const { userEmail } = req.params;
+    if(!userEmail) {
+        const err = new Error('User is is not provided')
+        throw err;
+    } 
+    console.log(userEmail);
+    
+    try {
         const user = await User.findOne({email: userEmail}).select("-password -refreshToken").lean();
         if(!user) {
             return res.status(404).json({

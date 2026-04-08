@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/LeftSideBar';
 import ChatSidebar from '../components/RightSideBar';
@@ -9,9 +9,11 @@ import {
     Compass,
     Wallet
 } from 'lucide-react';
+import { useAuthStore } from '../context/useAuth';
+import { axiosInstance } from '../utils/axiosInstance';
 /* eslint-ignore suggestCanonicalClasses */
 const ProfilePage = () => {
-
+    const [realUser, setUser] = useState();
     const user = {
         userName: "Aarav Sharma",
         email: "aarav.travels@example.com",
@@ -27,6 +29,18 @@ const ProfilePage = () => {
         savedPlacesCount: 8,
         savedTripsCount: 3
     };
+    const { userEmail } = useAuthStore();
+    useEffect(() => {
+        const run = async () => {
+            if(userEmail === null) return;
+
+            const res = await axiosInstance.get(`/user/getleanuserByEmail/${userEmail}`);
+            console.log(res.data)
+            setUser(res.data.user);
+        }
+
+        run();
+    }, [userEmail]);
 
     return (
         <div className="h-screen bg-[#f8f9fa] flex flex-col overflow-hidden text-gray-800">
@@ -90,7 +104,7 @@ const ProfilePage = () => {
                                 <div>
                                     <p className="text-[10px] uppercase tracking-[0.14em] text-white/30 mb-3">Base location</p>
                                     <p className="font-serif text-[1.5rem] text-[#d4c9b0] leading-snug mb-5">
-                                        {user.homeLocation.lat.toFixed(3)}°<br />{user.homeLocation.long.toFixed(3)}°
+                                        {realUser?.homeLocation.lat || user?.homeLocation.lat.toFixed(3)}°<br />{realUser?.homeLocation.lng || user?.homeLocation.long.toFixed(3)}°
                                     </p>
                                     <div className="w-full h-18 rounded-xl bg-[#2a2720] relative overflow-hidden mb-4">
                                         <div

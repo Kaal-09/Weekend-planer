@@ -1,8 +1,12 @@
-
-import {MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline, useMap} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import { Navigation } from "lucide-react";
+import { useAuthStore } from "../context/useAuth";
+import { useLocationStore } from "../context/useLocationContext.jsx";
+
+const BASE_URL = 'http://localhost:8000';
+
 
 function ChangeView({ center }) {
     const map = useMap();
@@ -12,7 +16,7 @@ function ChangeView({ center }) {
     return null;
 }
 
-function MapClickHandler({ setDestination, currentLocation, setRoute}) {
+function MapClickHandler({ setDestination, currentLocation, setRoute }) {
     useMapEvents({
         click: async (e) => {
             const dest = e.latlng;
@@ -38,8 +42,34 @@ function MapClickHandler({ setDestination, currentLocation, setRoute}) {
 
 function MapShower() {
     const [destination, setDestination] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState({lat: 22.7196, lng: 75.8577,});
+    const [currentLocation, setCurrentLocation] = useState({ lat: 22.7196, lng: 75.8577, });
     const [route, setRoute] = useState([]);
+    const { userEmail } = useAuthStore();
+    const { setLocation } = useLocationStore();
+
+    useEffect(() => {
+        const run = async () => {
+            
+            if(userEmail === null ){
+                return;
+            }
+            const res = await fetch(`${BASE_URL}/api/user/getuserByEmail/${userEmail}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: "include",
+            });
+
+            const data = await res.json();
+            if(!res.ok) throw new Error(data.message || 'User email in the AuthContext is not valid most prolly');
+            const user = data.user;
+            if((currentLocation != {lat: 22.7196, lng: 75.8577})) {
+                user.homeLocation = currentLocation;
+                await user.save();
+                setLocation(currentLocation);
+            }
+        }
+        run();
+    }, [currentLocation])
 
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition((pos) => {
@@ -65,7 +95,7 @@ function MapShower() {
                 zoom={10}
                 className="w-full h-full z-0"
             >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap'/>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap' />
                 {/* <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" /> */}
                 <ChangeView center={currentLocation} />
                 <MapClickHandler
