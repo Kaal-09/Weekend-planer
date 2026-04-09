@@ -13,11 +13,16 @@ const uploadOnCloudinary = async (localFilePath) => {
 
         const uploadResult = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto"
-        });
-
+        });  
+        console.log(uploadResult);
+        fs.unlink(localFilePath);
+        return uploadResult.secure_url
     } catch (error) {
-        fs.unlinkSync(localFilePath); // i really want to remove the file.
-
+        if (fs.existsSync(localFilePath)) {
+            fs.unlinkSync(localFilePath);
+        }
+        console.error("Cloudinary upload error:", error);
+        return null;
     }
 }
 

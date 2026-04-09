@@ -66,6 +66,11 @@ const userSchema = new Schema({
         }
     ],
 
+    profilePic: {
+        type: String,
+        default: "",
+    },
+
     occupation: {
         type: String,
         enum: ['Student', 'Professional', 'Researcher', 'Educator', 'Other'],

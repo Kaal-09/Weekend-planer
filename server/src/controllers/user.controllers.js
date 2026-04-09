@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { generateRefreshToken, generateToken } from "../utils/utils.js";
 import jwt from "jsonwebtoken";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const createUser = async (req, res) => {
     const {userName, email, password, age}= req.body;
@@ -227,7 +228,15 @@ export const updateUser = async (req, res) => {
     try {
         const userEmail = req.params.email;
         const updates = req.body;
-
+        console.log('Inside updateUser backend the recieved data is: ', updates);
+        const file = req.file;
+        if(file) {
+            console.log('File is passed to the req by multer and is as: ', file);
+            const uploadCloudinaryUrl = await uploadOnCloudinary(file.path);
+            if (uploadCloudinaryUrl) {
+                updates.profilePic = uploadCloudinaryUrl;
+            }
+        }
         const blockedFields = ["password", "_id", "__v"];
         blockedFields.forEach(field => delete updates[field]);
 

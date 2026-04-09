@@ -3,12 +3,14 @@ import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { axiosInstance } from '../utils/axiosInstance';
+import { useAuthStore } from '../context/useAuth';
 
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuthStore();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -20,6 +22,7 @@ function Login() {
             });
 
             toast.success(res.data.message || 'Login successful!');
+            login(email, password);
             navigate('/');
         } catch (error) {
 

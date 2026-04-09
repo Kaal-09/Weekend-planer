@@ -13,10 +13,16 @@ export const AuthProvider = ({ children }) => {
     useEffect(()=> {
         const savedToken = localStorage.getItem('authToken');
         const savedUser = localStorage.getItem('useremail');
-
-        if(savedToken && savedUser) {
-            setToken(savedToken);
+        console.log('saved token: ', savedToken);
+        console.log('saved user: ', savedUser);
+        console.log(JSON.parse(savedUser));
+        
+        
+        if(savedUser){
             setUserEmail(JSON.parse(savedUser));
+        }
+        if(savedToken) {
+            setToken(savedToken);
         }
         setLoading(false);
     }, [])
@@ -72,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ userEmail, token, loading, error, login, logout }}>
+        <AuthContext.Provider value={{ userEmail, token, loading, error, login, logout, setUserEmail }}>
             {children}
         </AuthContext.Provider>
     );

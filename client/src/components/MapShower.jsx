@@ -49,6 +49,39 @@ function MapShower() {
 
     useEffect(() => {
         const run = async () => {
+            console.log('UserEmail: ', userEmail);
+            
+            if(!userEmail || userEmail === null || userEmail === undefined) {
+                return;
+            } 
+            const res = await fetch(`${BASE_URL}/api/user/getleanuserByEmail/${userEmail}`, {
+                method: 'GET', 
+                headers: { 'Content-Type': 'application/json' },
+                credentials: "include"
+            });
+
+            const data = await res.json();
+            const leanUser = data.user;
+            console.log(data);
+            
+            setLocation(leanUser.homeLocation);
+            setCurrentLocation(leanUser.homeLocation);
+        }
+        run();
+    }, [userEmail])
+
+    const getLocation = () => {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            const newLoc = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+            };
+
+            setCurrentLocation(newLoc);
+
+            console.log(`Correct lat: ${newLoc.lat}, lng: ${newLoc.lng}`);
+        });
+        const run = async () => {
             if(!userEmail) return;
             if(userEmail === null || (currentLocation.lat === 22.7196 && currentLocation.lng === 75.8577)){
                 return;
@@ -69,19 +102,6 @@ function MapShower() {
             setLocation(notLeanUser.homeLocation);            
         }
         run();
-    }, [currentLocation])
-
-    const getLocation = () => {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            const newLoc = {
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude,
-            };
-
-            setCurrentLocation(newLoc);
-
-            console.log(`Correct lat: ${newLoc.lat}, lng: ${newLoc.lng}`);
-        });
     };
 
     return (

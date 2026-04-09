@@ -1,6 +1,7 @@
 import express from 'express'
 import { createUser, getUserByEmail, loginUser, logoutUser, refreshAccessToken, getleanUserByEmail, updateUser } from '../controllers/user.controllers.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
+import { upload } from '../middlewares/multer.middleware.js';
 
 const router = express.Router();
 
@@ -11,6 +12,6 @@ router.route('/logout').post(verifyJWT, logoutUser);
 router.route('/refresh-token').post(refreshAccessToken);
 router.route('/getuserByEmail/:userEmail').get(getUserByEmail);
 router.route('/getleanuserByEmail/:userEmail').get(getleanUserByEmail);
-router.patch("/update/:email", updateUser);
+router.patch("/update/:email", upload.single('avatar'), updateUser);
 
 export default router;
