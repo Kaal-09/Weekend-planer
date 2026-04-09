@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/LeftSideBar';
 import ChatSidebar from '../components/RightSideBar';
-import {
-    User as UserIcon,
-    Settings,
-    Share,
-    Compass,
-    Wallet
-} from 'lucide-react';
+import { User as UserIcon, Settings, Share, Compass, Wallet } from 'lucide-react';
 import { useAuthStore } from '../context/useAuth';
 import { axiosInstance } from '../utils/axiosInstance';
+import { useLocationStore } from '../context/useLocationContext';
 /* eslint-ignore suggestCanonicalClasses */
 const ProfilePage = () => {
     const [realUser, setUser] = useState();
+    const { location, setLocation } = useLocationStore();
     const user = {
         userName: "Aarav Sharma",
         email: "aarav.travels@example.com",
@@ -24,7 +20,7 @@ const ProfilePage = () => {
             budget: "medium",
             travelRadius: 15
         },
-        homeLocation: { lat: 25.000, long: 71.000 },
+        homeLocation: { lat: 90.000, long: 90.000 },
         friendsCount: 12,
         savedPlacesCount: 8,
         savedTripsCount: 3
@@ -37,6 +33,9 @@ const ProfilePage = () => {
             const res = await axiosInstance.get(`/user/getleanuserByEmail/${userEmail}`);
             console.log(res.data)
             setUser(res.data.user);
+            console.log('User found in profile page is: ', res.data.user);
+            
+            setLocation(res.data.user.homeLocation);
         }
 
         run();
@@ -104,7 +103,7 @@ const ProfilePage = () => {
                                 <div>
                                     <p className="text-[10px] uppercase tracking-[0.14em] text-white/30 mb-3">Base location</p>
                                     <p className="font-serif text-[1.5rem] text-[#d4c9b0] leading-snug mb-5">
-                                        {realUser?.homeLocation.lat || user?.homeLocation.lat.toFixed(3)}°<br />{realUser?.homeLocation.lng || user?.homeLocation.long.toFixed(3)}°
+                                        {location?.lat || user?.homeLocation.lat.toFixed(3) }°<br />{location?.lng || user?.homeLocation.long.toFixed(3)}°
                                     </p>
                                     <div className="w-full h-18 rounded-xl bg-[#2a2720] relative overflow-hidden mb-4">
                                         <div

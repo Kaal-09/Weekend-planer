@@ -42,41 +42,45 @@ function MapClickHandler({ setDestination, currentLocation, setRoute }) {
 
 function MapShower() {
     const [destination, setDestination] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState({ lat: 22.7196, lng: 75.8577, });
+    const [currentLocation, setCurrentLocation] = useState({ lat: 22.7196, lng: 75.8577 });
     const [route, setRoute] = useState([]);
     const { userEmail } = useAuthStore();
     const { setLocation } = useLocationStore();
 
     useEffect(() => {
         const run = async () => {
-            
-            if(userEmail === null ){
+            if(!userEmail) return;
+            if(userEmail === null || (currentLocation.lat === 22.7196 && currentLocation.lng === 75.8577)){
                 return;
             }
-            const res = await fetch(`${BASE_URL}/api/user/getuserByEmail/${userEmail}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: "include",
+            const res = await fetch(`${BASE_URL}/api/user/update/${userEmail}`, {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    homeLocation: currentLocation
+                })
             });
-
             const data = await res.json();
-            if(!res.ok) throw new Error(data.message || 'User email in the AuthContext is not valid most prolly');
-            const user = data.user;
-            if((currentLocation != {lat: 22.7196, lng: 75.8577})) {
-                user.homeLocation = currentLocation;
-                await user.save();
-                setLocation(currentLocation);
-            }
+            const notLeanUser = data.user;
+            console.log('notleanUser inside mapshower with updated postion from crome location api is: ', notLeanUser);
+            
+            setLocation(notLeanUser.homeLocation);            
         }
         run();
     }, [currentLocation])
 
     const getLocation = () => {
         navigator.geolocation.getCurrentPosition((pos) => {
-            setCurrentLocation({
+            const newLoc = {
                 lat: pos.coords.latitude,
                 lng: pos.coords.longitude,
-            });
+            };
+
+            setCurrentLocation(newLoc);
+
+            console.log(`Correct lat: ${newLoc.lat}, lng: ${newLoc.lng}`);
         });
     };
 

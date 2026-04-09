@@ -100,7 +100,7 @@ const userSchema = new Schema({
             type: Number,
             default: 25.000,
         },
-        long: {
+        lng: {
             type: Number,
             default: 71,
         }
