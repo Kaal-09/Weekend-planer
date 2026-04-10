@@ -240,14 +240,34 @@ export const updateUser = async (req, res) => {
         const blockedFields = ["password", "_id", "__v"];
         blockedFields.forEach(field => delete updates[field]);
 
-        const updatedUser = await User.findOneAndUpdate(
-            {email: userEmail},
-            { $set: updates },
-            {
-                returnDocument: 'after',          
-                runValidators: true 
-            }
+        const { homeLocation, ...restUpdates } = updates;
+
+        let updatedUser = null;
+        if(restUpdates) {
+            updatedUser =  await User.findOneAndUpdate(
+            { email: userEmail },
+            { $set: restUpdates },
+            { returnDocument: 'after', runValidators: true }
         );
+        }
+        let parsedLocation;
+        if (homeLocation) {
+            if (typeof homeLocation === "string") {
+                parsedLocation = JSON.parse(homeLocation);
+            } else {
+                parsedLocation = homeLocation;
+            }
+            updatedUser = await User.findOneAndUpdate(
+                { email: userEmail },
+                {
+                    $set: {
+                        "homeLocation.lat": parsedLocation.lat,
+                        "homeLocation.lng": parsedLocation.lng
+                    }
+                },
+                {returnDocument: 'after'}
+            );
+        }
 
         if (!updatedUser) {
             return res.status(404).json({

@@ -66,6 +66,8 @@ function MapShower() {
             
             setLocation(leanUser.homeLocation);
             setCurrentLocation(leanUser.homeLocation);
+            console.log('Current location is: ', leanUser.homeLocation);
+            
         }
         run();
     }, [userEmail])
