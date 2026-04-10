@@ -135,7 +135,7 @@ const EditProfile = () => {
             })
         );
         console.log('Form submit clicked and everthing is setup making backend call');
-        
+
         try {
             const res = await axiosInstance.patch(
                 `/user/update/${userEmail}`,
@@ -211,8 +211,18 @@ const EditProfile = () => {
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-6 mb-8">
                                             <div className="relative group">
-                                                <div className="w-24 h-24 rounded-4xl bg-[#e8e0d8] flex items-center justify-center font-serif text-2xl text-[#5c4a3a]">
-                                                    {formData.userName ? formData.userName.split(' ').map(n => n[0]).join('') : '?'}
+                                                <div className="w-24 h-24 rounded-4xl bg-[#e8e0d8] flex items-center justify-center font-serif text-2xl text-[#5c4a3a] overflow-hidden">
+                                                    {user?.profilePic ? (
+                                                        <img
+                                                            src={user.profilePic}
+                                                            alt="Profile Avatar"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <span>
+                                                            {formData.userName ? formData.userName.split(' ').map(n => n[0]).join('') : '?'}
+                                                        </span>
+                                                    )}
                                                 </div>
 
                                                 <div
@@ -222,6 +232,7 @@ const EditProfile = () => {
                                                     <Camera size={20} className="text-white" />
                                                 </div>
 
+                                                {/* The Hidden Input (Remains Unchanged) */}
                                                 <input
                                                     type="file"
                                                     ref={fileInputRef}
