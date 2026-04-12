@@ -241,9 +241,11 @@ export const updateUser = async (req, res) => {
         blockedFields.forEach(field => delete updates[field]);
 
         const { homeLocation, ...restUpdates } = updates;
-
+        console.log(homeLocation);
+        console.log(restUpdates);
+        
         let updatedUser = null;
-        if(restUpdates) {
+        if(Object.keys(restUpdates).length > 0) {
             updatedUser =  await User.findOneAndUpdate(
             { email: userEmail },
             { $set: restUpdates },
@@ -253,17 +255,19 @@ export const updateUser = async (req, res) => {
         let parsedLocation;
         if (homeLocation) {
             if (typeof homeLocation === "string") {
-                parsedLocation = JSON.parse(homeLocation);
+                parsedLocation = await JSON.parse(homeLocation);
             } else {
                 parsedLocation = homeLocation;
             }
             updatedUser = await User.findOneAndUpdate(
                 { email: userEmail },
                 {
-                    $set: {
-                        "homeLocation.lat": parsedLocation.lat,
-                        "homeLocation.lng": parsedLocation.lng
+                $set: {
+                    homeLocation: {
+                        lat: parsedLocation.lat,
+                        lng: parsedLocation.lng
                     }
+                }
                 },
                 {returnDocument: 'after'}
             );
@@ -288,6 +292,96 @@ export const updateUser = async (req, res) => {
         res.status(500).json({
             success: false,
             message: error.message || "Server error"
+        });
+    }
+};
+
+export const getSuggestedUsers = async (req, res) => {
+    try {
+        const { query } = req.params;
+
+        if (!query || query.trim() === "") {
+            return res.status(200).json({ users: [] });
+        }
+
+        const users = await User.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { userName: { $regex: `^${query}`, $options: "i" } },
+                        { email: { $regex: `^${query}`, $options: "i" } },
+                    ],
+                },
+            },
+            {
+                $project: {
+                    userName: 1,
+                    email: 1,
+                    profilePic: 1,
+                },
+            },
+            { $limit: 8 }, 
+        ]);
+
+        return res.status(200).json({
+            success: true,
+            users,
+        });
+    } catch (error) {
+        console.error("Error fetching suggested users:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error while searching users",
+        });
+    }
+};
+
+export const addUserById = async (req, res) => {
+    try {
+        const { query } = req.params;
+        if (!query || query.trim() === "") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
+            });
+        }
+        if (req.user._id.toString() === query) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot add yourself"
+            });
+        }
+
+        const userToAdd = await User.findById(query);
+
+        if (!userToAdd) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                $addToSet: { friends: userToAdd._id }
+            },
+            { returnDocument: 'after' }
+        );
+        console.log('User added as a friend.');
+        
+
+        return res.status(200).json({
+            success: true,
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.error("Error in adding a friend:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error while adding friend",
         });
     }
 };

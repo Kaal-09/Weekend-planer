@@ -64,10 +64,11 @@ function MapShower() {
             const leanUser = data.user;
             console.log(data);
             
-            setLocation(leanUser.homeLocation);
-            setCurrentLocation(leanUser.homeLocation);
-            console.log('Current location is: ', leanUser.homeLocation);
-            
+            const parsedLocation = leanUser.homeLocation;
+            setLocation(parsedLocation);
+            setCurrentLocation(parsedLocation);
+            console.log('Current location is: ', parsedLocation);
+                                 
         }
         run();
     }, [userEmail])

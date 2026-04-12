@@ -103,11 +103,11 @@ const userSchema = new Schema({
     homeLocation: {
         lat: {
             type: Number,
-            default: 22.7196,
+            default: 90,
         },
         lng: {
             type: Number,
-            default: 75.8577,
+            default: 90,
         }
     },
 
