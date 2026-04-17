@@ -385,3 +385,40 @@ export const addUserById = async (req, res) => {
         });
     }
 };
+
+export const getMyFriends = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id)
+            .populate("friends")
+            .select("-password -refreshToken");
+
+        return res.status(200).json({
+            success: true,
+            friends: user.friends
+        });
+
+    } catch (error) {
+        console.error("Error fetching friends:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+
+export const getMessagesForUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id)
+        .populate({
+            path: "recentChats.messages",
+        });
+
+        return res.status(200).json({
+            success: true,
+            messages: user.recentChats
+        });
+    } catch (error) {
+        
+    }
+}

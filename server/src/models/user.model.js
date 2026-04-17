@@ -121,27 +121,28 @@ const userSchema = new Schema({
         ref: "Trip",
     }],
 
-    receiverModel: {
-        type: String,
-        required: true,
-        enum: ["User", "ChatGroup"],
-    },
-
     recentChats: [{
         reciever: {
             type: Schema.Types.ObjectId,
             required: true,
-            refPath: "receiverModel",
+            refPath: "recentChats.receiverModel",
+        },
+        receiverModel: {
+            type: String,
+            required: true,
+            enum: ["User", "ChatGroup"],
         },
         messages: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                refPath: "Message",
-                require: true,
+                ref: "Message",
+                required: true,
             }
         ]
     }],
-    
+
+
+
     refreshToken: {
         type: String
     }

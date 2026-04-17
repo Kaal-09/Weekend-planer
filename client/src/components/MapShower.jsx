@@ -42,14 +42,14 @@ function MapClickHandler({ setDestination, currentLocation, setRoute }) {
 
 function MapShower() {
     const [destination, setDestination] = useState(null);
-    const [currentLocation, setCurrentLocation] = useState({ lat: 22.7196, lng: 75.8577 });
+    const [currentLocation, setCurrentLocation] = useState({ lat: 91, lng: 91 });
     const [route, setRoute] = useState([]);
     const { userEmail } = useAuthStore();
     const { setLocation } = useLocationStore();
 
     useEffect(() => {
         const run = async () => {
-            console.log('UserEmail: ', userEmail);
+            console.log('UserEmail in mapshower line 52: ', userEmail);
             
             if(!userEmail || userEmail === null || userEmail === undefined) {
                 return;
