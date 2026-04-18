@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditPage";
 import { Toaster } from "react-hot-toast";
+import ExploreMap from "./pages/ExploreMap";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/settings" element={<EditProfile />} />
+                <Route path="/trending" element={<ExploreMap />} />
 
             </Routes>    </>
     )

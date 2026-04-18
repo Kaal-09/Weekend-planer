@@ -143,7 +143,7 @@ const ChatSidebar = () => {
     };
 
     return (
-        <aside className={`h-full bg-white/80 backdrop-blur-xl border-l border-gray-200/60 flex transition-all duration-500 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.02)] ${activeChat ? "w-[550px]" : "w-80"}`}>
+        <aside className={`h-full bg-white/80 backdrop-blur-xl border-l border-gray-200/60 flex transition-all duration-500 ease-in-out shadow-[-10px_0_30px_rgba(0,0,0,0.02)] ${activeChat ? "w-137.5" : "w-80"}`}>
             <div className="w-80 shrink-0 flex flex-col border-r border-gray-100">
                 <div className="p-6 pb-4">
                     <div className="mb-6 space-y-4">
